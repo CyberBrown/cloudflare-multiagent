@@ -5,7 +5,7 @@
  * @date 2025-11-20
  */
 
-import { describe, test, expect, beforeAll, afterAll } from '@jest/globals';
+import { describe, test, expect, beforeAll, afterAll } from 'vitest';
 import { DatabaseQueries, generateId, hashApiKey } from '../../infrastructure/database/queries';
 
 // Mock D1Database for testing
