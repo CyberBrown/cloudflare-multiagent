@@ -122,8 +122,11 @@ describe('InstanceCache', () => {
       vi.advanceTimersByTime(2000); // 2 seconds
 
       const result2 = await shortCache.get('test-instance');
-      // Should be expired (miss)
-      expect(result2?.ttl_remaining).toBeLessThanOrEqual(0);
+      // Should be expired (returns null, not stale)
+      expect(result2).toBeNull();
+
+      const stats = shortCache.getStats();
+      expect(stats.misses).toBe(1); // Verify it counted as a miss
 
       vi.useRealTimers();
     });

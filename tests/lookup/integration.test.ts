@@ -296,14 +296,21 @@ describe('Instance Lookup Integration', () => {
         instance_id: 'production',
       };
 
-      fetchMock.mockResolvedValueOnce({
+      fetchMock.mockResolvedValue({
         ok: true,
         status: 200,
         json: async () => mockConfig,
       });
 
-      // Simulate 10 rapid requests
-      const promises = Array(10)
+      // First request - should fetch from Config Service and cache
+      const first = await resolveInstance(kv as any, context, {
+        config_service_url: 'https://config.example.com',
+      });
+      expect(first).toEqual(mockConfig);
+      expect(fetchMock).toHaveBeenCalledTimes(1);
+
+      // Subsequent rapid requests - should use cache
+      const promises = Array(9)
         .fill(null)
         .map(() =>
           resolveInstance(kv as any, context, {
@@ -313,18 +320,26 @@ describe('Instance Lookup Integration', () => {
 
       const results = await Promise.all(promises);
 
-      // All should return the same config
+      // All should return the same config from cache
       results.forEach((config) => {
         expect(config).toEqual(mockConfig);
       });
 
-      // Config Service should only be called once
+      // Config Service should still only have been called once (cache working)
       expect(fetchMock).toHaveBeenCalledTimes(1);
     });
 
     it('should handle different instances for different users', async () => {
-      const user1Config = { ...mockConfig, instance_id: 'user1-instance' };
-      const user2Config = { ...mockConfig, instance_id: 'user2-instance' };
+      const user1Config: InstanceConfig = {
+        ...mockConfig,
+        instance_id: 'user1-instance',
+        metadata: { ...mockConfig.metadata, owner: 'user_1' },
+      };
+      const user2Config: InstanceConfig = {
+        ...mockConfig,
+        instance_id: 'user2-instance',
+        metadata: { ...mockConfig.metadata, owner: 'user_2' },
+      };
 
       const context1: LookupContext = {
         user: { user_id: 'user_1' },

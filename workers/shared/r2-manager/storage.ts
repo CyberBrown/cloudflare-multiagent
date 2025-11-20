@@ -81,7 +81,11 @@ export function sanitizeFilename(filename: string): string {
   // Remove path traversal attempts
   let sanitized = filename.replace(/\.\./g, '');
 
-  // Replace unsafe characters with underscores
+  // Remove path separators (security: prevent directory traversal)
+  sanitized = sanitized.replace(/\//g, '');
+  sanitized = sanitized.replace(/\\/g, '');
+
+  // Replace unsafe characters with underscores (keep only ., _, -, alphanumeric)
   sanitized = sanitized.replace(/[^a-zA-Z0-9._-]/g, '_');
 
   // Ensure it has an extension
