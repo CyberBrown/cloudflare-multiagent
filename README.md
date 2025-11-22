@@ -193,6 +193,16 @@ This project is built autonomously by AI agents. Human oversight for:
 - Credential management
 - Monitoring and incident response
 
+### Adding New Workers/Services
+
+When creating a new worker or service:
+1. **Add it to the Admin Panel Services page** - See `interfaces/admin-panel/ADDING_SERVICES.md`
+2. **Follow the PR template** - Complete the "New Service Checklist"
+3. **Document your API** - Include endpoints, examples, and usage instructions
+4. **Create a Testing GUI** (if user-facing) - Make it easy for others to try your service
+
+This ensures all services are discoverable and properly documented for the team.
+
 ---
 
 **Built with Claude Code** | **Powered by Cloudflare Workers** | **Autonomous Multi-Agent Development**

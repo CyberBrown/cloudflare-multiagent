@@ -6,6 +6,7 @@ import Login from './pages/Login'
 import Instances from './pages/Instances'
 import Users from './pages/Users'
 import Logs from './pages/Logs'
+import Services from './pages/Services'
 
 function App() {
   const [isAuthenticated, setIsAuthenticated] = useState(false)
@@ -52,6 +53,7 @@ function App() {
           <Route path="/instances" element={<Instances />} />
           <Route path="/users" element={<Users />} />
           <Route path="/logs" element={<Logs />} />
+          <Route path="/services" element={<Services />} />
           <Route path="*" element={<Navigate to="/instances" replace />} />
         </Routes>
       </main>

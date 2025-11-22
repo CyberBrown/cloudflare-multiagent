@@ -38,7 +38,7 @@ CDN_URL = "https://cdn.example.com"
 # Secrets (set with: wrangler secret put <NAME>)
 # - IDEOGRAM_API_KEY
 
-# Routes (example)
-# routes = [
-#   { pattern = "image-gen.example.com/*", zone_name = "example.com" }
-# ]
+# Custom routes
+routes = [
+  { pattern = "images.distributedelectrons.com/*", zone_name = "distributedelectrons.com" }
+]

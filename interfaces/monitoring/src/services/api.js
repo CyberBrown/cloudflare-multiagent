@@ -130,7 +130,7 @@ const generateMockMetrics = (instance, timeRange) => {
 // API Service
 class MonitoringApiService {
   constructor() {
-    this.baseUrl = 'https://config-service.solamp.workers.dev'
+    this.baseUrl = 'https://api.distributedelectrons.com'
   }
 
   getAuthHeader() {

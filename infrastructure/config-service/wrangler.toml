@@ -42,8 +42,6 @@ database_id = ""  # Development database ID
 # command = "npm run build"
 
 # Routes configuration
-# These will be configured based on your domain
-# Example routes:
-# routes = [
-#   { pattern = "config.yourdomain.com/*", zone_name = "yourdomain.com" }
-# ]
+routes = [
+  { pattern = "api.distributedelectrons.com/*", zone_name = "distributedelectrons.com" }
+]

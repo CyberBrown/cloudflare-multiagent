@@ -7,5 +7,5 @@ pages_build_output_dir = "dist"
 [env.production]
 name = "monitoring-dashboard-production"
 
-[env.development]
-name = "monitoring-dashboard-dev"
+[env.preview]
+name = "monitoring-dashboard-preview"

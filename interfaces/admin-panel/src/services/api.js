@@ -9,8 +9,18 @@ const mockInstances = [
     org_id: 'solamp',
     name: 'Production Instance',
     status: 'active',
-    api_keys: { ideogram: 'ide_***' },
-    rate_limits: { ideogram: { rpm: 500, tpm: 100000 } },
+    api_keys: {
+      ideogram: 'ide_prod123456789',
+      openai: 'sk-proj-abcdef1234567890',
+      anthropic: 'sk-ant-api03-xyz789',
+      gemini: 'AIzaSyABCDEF1234567890'
+    },
+    rate_limits: {
+      ideogram: { rpm: 500, tpm: 100000 },
+      openai: { rpm: 1000, tpm: 500000 },
+      anthropic: { rpm: 800, tpm: 400000 },
+      gemini: { rpm: 600, tpm: 300000 }
+    },
     worker_urls: { image_gen: 'https://image-gen-production.workers.dev' },
     r2_bucket: 'prod-images',
     authorized_users: ['user_123', 'user_456'],
@@ -21,8 +31,14 @@ const mockInstances = [
     org_id: 'solamp',
     name: 'Development Instance',
     status: 'active',
-    api_keys: { ideogram: 'ide_dev_***' },
-    rate_limits: { ideogram: { rpm: 100, tpm: 50000 } },
+    api_keys: {
+      ideogram: 'ide_dev987654321',
+      openai: 'sk-test-1234567890abcdef'
+    },
+    rate_limits: {
+      ideogram: { rpm: 100, tpm: 50000 },
+      openai: { rpm: 200, tpm: 100000 }
+    },
     worker_urls: { image_gen: 'https://image-gen-development.workers.dev' },
     r2_bucket: 'dev-images',
     authorized_users: ['user_123'],
@@ -95,7 +111,7 @@ const delay = (ms = 500) => new Promise(resolve => setTimeout(resolve, ms))
 // API Service
 class ApiService {
   constructor() {
-    this.baseUrl = 'https://config-service.solamp.workers.dev'
+    this.baseUrl = 'https://api.distributedelectrons.com'
   }
 
   getAuthHeader() {
@@ -370,6 +386,82 @@ class ApiService {
     if (!response.ok) throw new Error('Failed to fetch metrics')
     return await response.json()
   }
+
+  // Provider API Key Management
+  async updateProviderApiKey(instanceId, providerId, apiKey) {
+    if (USE_MOCK) {
+      await delay(300)
+      const instance = mockInstances.find(i => i.instance_id === instanceId)
+      if (!instance) throw new Error('Instance not found')
+
+      if (!instance.api_keys) {
+        instance.api_keys = {}
+      }
+
+      instance.api_keys[providerId] = apiKey
+
+      return {
+        success: true,
+        message: `${providerId} API key updated successfully`,
+        instance_id: instanceId,
+        provider: providerId
+      }
+    }
+
+    // Use existing updateInstance endpoint
+    return this.updateInstance(instanceId, {
+      api_keys: {
+        [providerId]: apiKey
+      }
+    })
+  }
+
+  async deleteProviderApiKey(instanceId, providerId) {
+    if (USE_MOCK) {
+      await delay(300)
+      const instance = mockInstances.find(i => i.instance_id === instanceId)
+      if (!instance) throw new Error('Instance not found')
+
+      if (instance.api_keys && instance.api_keys[providerId]) {
+        delete instance.api_keys[providerId]
+      }
+
+      return {
+        success: true,
+        message: `${providerId} API key deleted successfully`,
+        instance_id: instanceId,
+        provider: providerId
+      }
+    }
+
+    // In real implementation, this would be a PATCH that removes the key
+    return this.updateInstance(instanceId, {
+      api_keys: {
+        [providerId]: null
+      }
+    })
+  }
+
+  async testProviderApiKey(providerId, apiKey) {
+    // This would call the actual provider API to validate the key
+    // For now, just simulate the test
+    await delay(1500)
+
+    // Simple validation: check if it's not empty and matches basic format
+    if (!apiKey || apiKey.length < 10) {
+      return {
+        success: false,
+        message: 'API key appears to be invalid (too short)'
+      }
+    }
+
+    // Simulate success for demo
+    return {
+      success: true,
+      message: `${providerId} API key format is valid`
+    }
+  }
 }
+
 
 export default new ApiService()

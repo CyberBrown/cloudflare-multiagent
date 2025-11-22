@@ -188,7 +188,7 @@ async function generateImage(formData) {
 
 // Generate Image - Real API
 async function generateImageReal(formData) {
-    const baseUrl = `https://image-gen.solamp.workers.dev`;
+    const baseUrl = `https://images.distributedelectrons.com`;
 
     const response = await fetch(`${baseUrl}/generate`, {
         method: 'POST',

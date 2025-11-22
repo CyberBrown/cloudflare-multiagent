@@ -6,9 +6,13 @@ React-based admin interface for managing the Cloudflare Multi-Agent System.
 
 - **Instance Management**: Create, update, and delete worker instances
 - **User Management**: Add users and assign instance access
+- **Services Directory**: Browse available services with links and usage instructions
 - **API Key Generation**: Generate and revoke API keys
 - **Log Viewer**: Filter and search system logs
 - **Mock API Support**: Test interface without backend dependencies
+
+> **⚠️ IMPORTANT FOR DEVELOPERS**: When you create a new worker or service, you **MUST** add it to the Services page!
+> See [ADDING_SERVICES.md](./ADDING_SERVICES.md) for detailed instructions.
 
 ## Tech Stack
 
@@ -88,7 +92,18 @@ Manage users and API keys:
 - Revoke API keys
 - View API key usage (last used timestamp)
 
-### 3. Logs Page
+### 3. Services Page
+
+Browse and interact with available services:
+
+- **Service Directory**: View all deployed services (Image Generation, Config Service, etc.)
+- **Quick Links**: Direct access to Testing GUI, Monitoring Dashboard, and other interfaces
+- **API Documentation**: Endpoint reference for each service
+- **Usage Instructions**: Step-by-step guides for using each service
+- **Code Examples**: Copy-paste ready curl commands and code snippets
+- **Service Status**: Real-time status indicators for all services
+
+### 4. Logs Page
 
 View and filter system logs:
 
@@ -126,6 +141,7 @@ admin-panel/
 │   │   ├── Login.jsx
 │   │   ├── Instances.jsx
 │   │   ├── Users.jsx
+│   │   ├── Services.jsx
 │   │   └── Logs.jsx
 │   ├── services/        # API service
 │   │   └── api.js

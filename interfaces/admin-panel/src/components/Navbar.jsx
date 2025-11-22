@@ -36,6 +36,12 @@ export default function Navbar({ onLogout }) {
                 Users
               </Link>
               <Link
+                to="/services"
+                className={`px-3 py-2 rounded-md text-sm font-medium transition ${isActive('/services')}`}
+              >
+                Services
+              </Link>
+              <Link
                 to="/logs"
                 className={`px-3 py-2 rounded-md text-sm font-medium transition ${isActive('/logs')}`}
               >
