@@ -50,7 +50,7 @@ export const services = [
     links: [
       {
         name: 'Testing GUI',
-        url: 'https://testing-gui.pages.dev',
+        url: 'https://testing.distributedelectrons.com',
         description: 'Interactive web interface for testing image generation'
       },
       {
@@ -72,7 +72,7 @@ export const services = [
     },
     example: {
       title: 'Example Request',
-      code: `curl -X POST https://image-gen.workers.dev/generate \\
+      code: `curl -X POST https://images.distributedelectrons.com/generate \\
   -H "Authorization: Bearer YOUR_API_KEY" \\
   -H "Content-Type: application/json" \\
   -d '{
@@ -152,7 +152,7 @@ export const services = [
     links: [
       {
         name: 'Monitoring Dashboard',
-        url: 'https://monitoring.pages.dev',
+        url: 'https://monitoring.distributedelectrons.com',
         description: 'View real-time metrics and system health'
       }
     ],
