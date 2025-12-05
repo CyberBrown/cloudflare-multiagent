@@ -1,44 +1,23 @@
 /**
- * Type definitions for Text Generation Worker
+ * Text Generation Worker Types
  */
-
-export interface Env {
-  // KV namespace for encrypted provider API keys
-  PROVIDER_KEYS: KVNamespace;
-
-  // D1 Database for auth
-  DB: D1Database;
-
-  // Environment variables
-  CONFIG_SERVICE_URL: string;
-  DEFAULT_PROVIDER: string;
-  DEFAULT_MODEL_ID: string;
-
-  // Secrets
-  ENCRYPTION_KEY?: string;
-
-  // Fallback API keys (optional, for development)
-  OPENAI_API_KEY?: string;
-  ANTHROPIC_API_KEY?: string;
-}
 
 export interface GenerateRequest {
   prompt: string;
   model?: string;
   instance_id?: string;
-  options?: GenerateOptions;
-}
-
-export interface GenerateOptions {
-  system_prompt?: string;
-  max_tokens?: number;
-  temperature?: number;
-  top_p?: number;
-  stop_sequences?: string[];
+  project_id?: string;
+  options?: {
+    max_tokens?: number;
+    temperature?: number;
+    top_p?: number;
+    stream?: boolean;
+    [key: string]: any;
+  };
 }
 
 export interface GenerateResponse {
-  success: true;
+  success: boolean;
   text: string;
   metadata: {
     provider: string;
@@ -57,60 +36,42 @@ export interface ErrorResponse {
   details?: Record<string, any>;
 }
 
+export interface Env {
+  // Bindings
+  RATE_LIMITER?: DurableObjectNamespace;
+
+  // Environment variables
+  DEFAULT_INSTANCE_ID?: string;
+  DEFAULT_PROVIDER?: string;
+
+  // API Keys (from secrets)
+  OPENAI_API_KEY?: string;
+  ANTHROPIC_API_KEY?: string;
+}
+
 export interface InstanceConfig {
   instance_id: string;
   org_id: string;
-  name: string;
   api_keys: Record<string, string>;
-  rate_limits: Record<string, RateLimitConfig>;
+  rate_limits: Record<
+    string,
+    {
+      rpm: number;
+      tpm: number;
+    }
+  >;
+  authorized_users?: string[];
 }
 
-export interface RateLimitConfig {
-  rpm?: number;
-  tpm?: number;
+export interface ProviderAdapter {
+  name: string;
+  generate: (prompt: string, options: any, apiKey: string) => Promise<TextResult>;
 }
 
-export interface ModelConfig {
-  config_id: string;
-  model_id: string;
-  provider_id: string;
-  display_name: string;
-  description?: string;
-  capabilities: Record<string, boolean>;
-  pricing?: Record<string, any>;
-  rate_limits?: RateLimitConfig;
-  payload_mapping: PayloadMapping;
-  prompt_template?: PromptTemplate;
-  status: 'active' | 'beta' | 'deprecated';
-}
-
-export interface PayloadMapping {
-  endpoint: string;
-  method: string;
-  headers: Record<string, string>;
-  body: any;
-  response_mapping: Record<string, string>;
-  defaults?: Record<string, any>;
-}
-
-export interface PromptTemplate {
-  system_prompt?: string;
-  user_prompt_wrapper?: string;
-  default_temperature?: number;
-  default_max_tokens?: number;
-  stop_sequences?: string[];
-}
-
-export interface AuthResult {
-  authorized: boolean;
-  instance_id?: string;
-  user_id?: string;
-  error?: string;
-}
-
-export interface TextGenerationResult {
+export interface TextResult {
   text: string;
   provider: string;
   model: string;
   tokens_used: number;
+  metadata?: Record<string, any>;
 }
